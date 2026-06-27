@@ -1,0 +1,24 @@
+{
+  "name": "小願望達摩帳",
+  "short_name": "達摩願望",
+  "description": "用達摩記錄進行中與已完成的小願望。",
+  "start_url": "daruma-wishes.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fff7e7",
+  "theme_color": "#c52222",
+  "icons": [
+    {
+      "src": "assets/daruma-wishes/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/daruma-wishes/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
