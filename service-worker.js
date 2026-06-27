@@ -1,6 +1,7 @@
 const CACHE_NAME = "daruma-wishes-v1";
 const CORE_ASSETS = [
   "./",
+  "./index.html",
   "./daruma-wishes.html",
   "./manifest.webmanifest",
   "./assets/daruma-wishes/daruma-cropped.png",

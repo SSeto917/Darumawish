@@ -2,7 +2,7 @@
   "name": "小願望達摩帳",
   "short_name": "達摩願望",
   "description": "用達摩記錄進行中與已完成的小願望。",
-  "start_url": "daruma-wishes.html",
+  "start_url": "index.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#fff7e7",
