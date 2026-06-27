@@ -201,11 +201,6 @@
       box-shadow: 0 0 0 3px rgba(216, 167, 63, .18);
     }
 
-    .register-button {
-      color: var(--muted);
-      background: rgba(255, 248, 237, .85);
-    }
-
     .wish-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
@@ -515,7 +510,6 @@
           <input class="auth-input" id="authEmail" type="email" autocomplete="email" placeholder="Email" aria-label="Email">
           <input class="auth-input" id="authPassword" type="password" autocomplete="current-password" placeholder="密碼" aria-label="密碼">
           <button class="auth-button" id="authButton" type="button">登入</button>
-          <button class="auth-button register-button" id="registerButton" type="button">註冊</button>
         </div>
         <button class="icon-button" id="addWish" type="button" title="新增願望" aria-label="新增願望">+</button>
       </div>
@@ -590,7 +584,6 @@
     const authEmail = document.querySelector("#authEmail");
     const authPassword = document.querySelector("#authPassword");
     const authButton = document.querySelector("#authButton");
-    const registerButton = document.querySelector("#registerButton");
     const totalCount = document.querySelector("#totalCount");
     const activeCount = document.querySelector("#activeCount");
     const doneCount = document.querySelector("#doneCount");
@@ -771,8 +764,6 @@
       const config = window.DARUMA_FIREBASE_CONFIG;
       if (!config || !config.apiKey || !config.projectId) {
         setSyncStatus("本機儲存；填入 Firebase 設定後可同步");
-        authButton.disabled = true;
-        registerButton.disabled = true;
         return;
       }
 
@@ -787,14 +778,12 @@
           currentUser = user;
           if (user) {
             authButton.textContent = "登出";
-            registerButton.hidden = true;
             authEmail.hidden = true;
             authPassword.hidden = true;
             connectRemoteDocument(db, config, user);
           } else {
             disconnectRemoteDocument();
             authButton.textContent = "登入";
-            registerButton.hidden = false;
             authEmail.hidden = false;
             authPassword.hidden = false;
             setSyncStatus("請登入以讀取 Firebase 紀錄");
@@ -890,7 +879,10 @@
     }
 
     authButton.addEventListener("click", async () => {
-      if (!firebaseAuth) return;
+      if (!firebaseAuth) {
+        setSyncStatus("Firebase 尚未連線，請重新整理或確認設定檔已上傳");
+        return;
+      }
 
       try {
         if (currentUser) {
@@ -905,20 +897,6 @@
       } catch (error) {
         console.error(error);
         setSyncStatus("登入失敗，請確認 Email/密碼或 Firebase Auth 設定");
-      }
-    });
-
-    registerButton.addEventListener("click", async () => {
-      if (!firebaseAuth) return;
-
-      try {
-        setSyncStatus("註冊中...");
-        const credentials = readAuthCredentials();
-        if (!credentials) return;
-        await firebaseAuth.createUserWithEmailAndPassword(credentials.email, credentials.password);
-      } catch (error) {
-        console.error(error);
-        setSyncStatus("註冊失敗，請確認 Email/Password 已啟用");
       }
     });
 
