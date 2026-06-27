@@ -557,6 +557,8 @@
   <script>
     const storageKey = "daruma-wishes-v1";
     const firebaseSdkVersion = "10.12.5";
+    const firebaseConfigPath = "assets/daruma-wishes/firebase-config.js";
+    const firebaseConfigVersion = "20260627-3";
     const fallbackDarumaColors = [
       { name: "赤", romanized: "AKA", value: "#CB1B45" },
       { name: "山吹", romanized: "YAMABUKI", value: "#F9BF45" },
@@ -598,6 +600,7 @@
     let currentUser = null;
     let applyingRemote = false;
     let remoteSaveTimer = 0;
+    let firebaseInitPromise = null;
 
     function loadWishes() {
       try {
@@ -761,9 +764,9 @@
     }
 
     async function initFirebaseSync() {
-      const config = window.DARUMA_FIREBASE_CONFIG;
+      const config = await ensureFirebaseConfig();
       if (!config || !config.apiKey || !config.projectId) {
-        setSyncStatus("本機儲存；填入 Firebase 設定後可同步");
+        setSyncStatus("Firebase 設定未讀取：請確認 assets/daruma-wishes/firebase-config.js 已上傳且不是 null");
         return;
       }
 
@@ -801,6 +804,21 @@
       return loadScript(`https://www.gstatic.com/firebasejs/${firebaseSdkVersion}/firebase-app-compat.js`)
         .then(() => loadScript(`https://www.gstatic.com/firebasejs/${firebaseSdkVersion}/firebase-auth-compat.js`))
         .then(() => loadScript(`https://www.gstatic.com/firebasejs/${firebaseSdkVersion}/firebase-firestore-compat.js`));
+    }
+
+    async function ensureFirebaseConfig() {
+      if (window.DARUMA_FIREBASE_CONFIG?.apiKey && window.DARUMA_FIREBASE_CONFIG?.projectId) {
+        return window.DARUMA_FIREBASE_CONFIG;
+      }
+
+      try {
+        await loadScript(`${firebaseConfigPath}?v=${firebaseConfigVersion}&t=${Date.now()}`);
+      } catch (error) {
+        console.error(error);
+        setSyncStatus("Firebase 設定檔載入失敗：請確認 assets/daruma-wishes/firebase-config.js 有上傳");
+      }
+
+      return window.DARUMA_FIREBASE_CONFIG;
     }
 
     function connectRemoteDocument(db, config, user) {
@@ -880,8 +898,15 @@
 
     authButton.addEventListener("click", async () => {
       if (!firebaseAuth) {
-        setSyncStatus("Firebase 尚未連線，請重新整理或確認設定檔已上傳");
-        return;
+        firebaseInitPromise ||= initFirebaseSync().finally(() => {
+          firebaseInitPromise = null;
+        });
+        await firebaseInitPromise;
+
+        if (!firebaseAuth) {
+          setSyncStatus("Firebase 尚未連線：請檢查 firebase-config.js 是否已上傳，並在 Firebase Console 啟用 Email/Password");
+          return;
+        }
       }
 
       try {
