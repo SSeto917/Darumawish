@@ -559,7 +559,7 @@
   </template>
 
   <script src="assets/daruma-wishes/nippon-colors.js"></script>
-  <script src="assets/daruma-wishes/firebase-config.js"></script>
+  <script src="assets/daruma-wishes/firebase-config.js?v=20260627-2"></script>
   <script>
     const storageKey = "daruma-wishes-v1";
     const firebaseSdkVersion = "10.12.5";
@@ -772,6 +772,7 @@
       if (!config || !config.apiKey || !config.projectId) {
         setSyncStatus("本機儲存；填入 Firebase 設定後可同步");
         authButton.disabled = true;
+        registerButton.disabled = true;
         return;
       }
 
@@ -928,7 +929,9 @@
         return;
       }
 
-      navigator.serviceWorker.register("service-worker.js").catch((error) => {
+      navigator.serviceWorker.register("service-worker.js").then((registration) => {
+        registration.update();
+      }).catch((error) => {
         console.error(error);
       });
     }

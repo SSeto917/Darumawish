@@ -1,4 +1,4 @@
-const CACHE_NAME = "daruma-wishes-v2";
+const CACHE_NAME = "daruma-wishes-v3";
 const CORE_ASSETS = [
   "./",
   "./index.html",
@@ -7,8 +7,7 @@ const CORE_ASSETS = [
   "./assets/daruma-wishes/daruma-cropped.png",
   "./assets/daruma-wishes/icon-192.png",
   "./assets/daruma-wishes/icon-512.png",
-  "./assets/daruma-wishes/nippon-colors.js",
-  "./assets/daruma-wishes/firebase-config.js"
+  "./assets/daruma-wishes/nippon-colors.js"
 ];
 
 self.addEventListener("install", (event) => {
@@ -29,16 +28,31 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  const url = new URL(event.request.url);
+  const networkFirst = url.pathname.endsWith("/")
+    || url.pathname.endsWith("/index.html")
+    || url.pathname.endsWith("/daruma-wishes.html")
+    || url.pathname.endsWith("/assets/daruma-wishes/firebase-config.js");
+
+  if (networkFirst) {
+    event.respondWith(
+      fetch(event.request).then((response) => {
+        const copy = response.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+        return response;
+      }).catch(() => caches.match(event.request).then((cached) => cached || caches.match("./index.html")))
+    );
+    return;
+  }
 
   event.respondWith(
     caches.match(event.request).then((cached) => {
       if (cached) return cached;
-
       return fetch(event.request).then((response) => {
         const copy = response.clone();
         caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
         return response;
-      }).catch(() => caches.match("./daruma-wishes.html"));
+      }).catch(() => caches.match("./index.html"));
     })
   );
 });
