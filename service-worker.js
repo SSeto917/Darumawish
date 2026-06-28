@@ -1,4 +1,4 @@
-const CACHE_NAME = "daruma-wishes-v4";
+const CACHE_NAME = "daruma-wishes-v5";
 const CORE_ASSETS = [
   "./",
   "./index.html",
