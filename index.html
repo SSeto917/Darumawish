@@ -566,8 +566,7 @@
       storageBucket: "daruma-507c1.firebasestorage.app",
       messagingSenderId: "617517866846",
       appId: "1:617517866846:web:097855a5e6d94c85d339cf",
-      syncCollection: "darumaWishes",
-      syncDocId: "default"
+      syncCollection: "darumaWishes"
     };
     const fallbackDarumaColors = [
       { name: "赤", romanized: "AKA", value: "#CB1B45" },
@@ -854,7 +853,8 @@
         setSyncStatus(`Firebase 已同步：${user.displayName || user.email || "已登入"}`);
       }, (error) => {
         console.error(error);
-        setSyncStatus("Firebase 讀取失敗，本機模式");
+        const code = error?.code ? `：${error.code}` : "";
+        setSyncStatus(`Firebase 讀取失敗${code}，本機模式`);
       });
     }
 
