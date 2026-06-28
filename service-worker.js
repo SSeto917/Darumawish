@@ -1,4 +1,4 @@
-const CACHE_NAME = "daruma-wishes-v5";
+const CACHE_NAME = "daruma-wishes-v6";
 const CORE_ASSETS = [
   "./",
   "./index.html",
@@ -7,6 +7,7 @@ const CORE_ASSETS = [
   "./assets/daruma-wishes/daruma-cropped.png",
   "./assets/daruma-wishes/icon-192.png",
   "./assets/daruma-wishes/icon-512.png",
+  "./assets/daruma-wishes/firebase-config.js",
   "./assets/daruma-wishes/nippon-colors.js"
 ];
 

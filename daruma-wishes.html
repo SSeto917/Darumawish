@@ -553,12 +553,22 @@
   </template>
 
   <script src="assets/daruma-wishes/nippon-colors.js"></script>
-  <script src="assets/daruma-wishes/firebase-config.js?v=20260627-2"></script>
+  <script src="assets/daruma-wishes/firebase-config.js?v=20260629-2"></script>
   <script>
     const storageKey = "daruma-wishes-v1";
     const firebaseSdkVersion = "10.12.5";
     const firebaseConfigPath = "assets/daruma-wishes/firebase-config.js";
-    const firebaseConfigVersion = "20260629-1";
+    const firebaseConfigVersion = "20260629-2";
+    window.DARUMA_FIREBASE_CONFIG = window.DARUMA_FIREBASE_CONFIG || {
+      apiKey: "AIzaSyC1HpEQiEf7ZSgMUL-Z7W6pVYUEV9W-c1E",
+      authDomain: "daruma-507c1.firebaseapp.com",
+      projectId: "daruma-507c1",
+      storageBucket: "daruma-507c1.firebasestorage.app",
+      messagingSenderId: "617517866846",
+      appId: "1:617517866846:web:097855a5e6d94c85d339cf",
+      syncCollection: "darumaWishes",
+      syncDocId: "default"
+    };
     const fallbackDarumaColors = [
       { name: "赤", romanized: "AKA", value: "#CB1B45" },
       { name: "山吹", romanized: "YAMABUKI", value: "#F9BF45" },
